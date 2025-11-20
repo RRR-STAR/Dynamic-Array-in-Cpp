@@ -6,7 +6,6 @@
 #include <initializer_list>
 #include <stdexcept>
 
-
 /**
 * @brief
 * An implementation of Dynamic type array which contains the properties of Array, 
@@ -53,7 +52,9 @@ class DArr {
     inline typename std::list<__t>::iterator end(){ return _data.end(); }
     inline typename std::list<__t>::const_iterator end() const { return _data.end(); }
     
-    // delete all elements at once
+    // delete all elements at once 
+    // @note if the elements themselves are pointers, the pointed-to memory is not touched in any way. 
+    // Managing the pointer is the user's responsibility. 
     inline void clear(){ _address.clear(); _data.clear(); _index = 0; }
     
     // checks that the array is empty or not
