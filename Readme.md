@@ -1,26 +1,67 @@
 
-# Project Explanation
+# Dynamic Array in C++
 
-Key Idea - Is to create such a array that doesn't cause memory wastage, and provide the functionality of the arrays.
+This project implements a custom `DArr` class in C++. The goal is to create a dynamic, array-like data structure that avoids the memory wastage and reallocation overhead associated with `std::vector` while providing the O(1) element access time that `std::list` lacks.
 
-Approach - As Lists(std::list<T>) are the great choise for linked list represent and also for memeory efficient design and the best part is that the insertion and deletion operations can be done in O(1) time complexity.
+## Key Idea
 
-Problem - But the main probelm is lists doesn't provide random access or O(1) time access to it's elements like arrays. Because it doesn't store it's elements in a contigious way.
+The `DArr` class combines the strengths of two standard library containers:
+- `std::list<T>`: Used for efficient, O(1) insertion and deletion at the end, avoiding the need to shift elements.
+- `std::unordered_map<size_t, typename std::list<T>::iterator>`: Used to map an integer index to an iterator pointing to the corresponding element in the list, enabling O(1) random access.
 
-Solution (vectors) - So for this one thing we can do is using of Vectors(std::vector<T>) which is a great solution, and also it is a standard part of C++, so it also provides more functionalities.
+The implementation is contained within the `DArr.hpp` header file and is demonstrated in `main.cpp`.
 
-Problems (in vector type) - Althoug it is a great alternative but at the same time as it uses the raw arrays in it's internal structure, that's why whenever we need to insert a new element it allocates a new array and shift all the elements to that array and then, de-allocates previous array, although the re-allocation & de-allocation is not done every time, but initially it does a lot when the array size is small.
+## Building and Running
 
-Solution - That's why to resolve this two problems(List random access, vectors re-allocation & de-allocation) combindly the @class `DynamicArray` was implemented. Which is a combination of std::list<T> type and std::unordered_map<T> type so that we can access the elements of the lists in O(1) time using unordered maps mapping(which is also a O(1) time operation) and no need for re-allocation & de-allocation for new inputs.
+This is a simple C++ project that can be compiled with a standard C++ compiler like g++.
 
-Assumption - Although the unordered map (std::unordered_map<T>) provides the O(1) time access to values using keys, but as the unordered_map uses the 'hash' technique to store the values into the hash table. And we do not have any control to that hash table. So if the hash table is small then it creates a hash collision(two keys generates a same hash output value and thus two keys stores at the same position of the hash table) and the element access time gets increased from O(1) to O(n). That's why to resolve this problem there is function called max_load_factor(), which is have used in the contructor to get a bigger hash table and prevent the hash collisions.
+## Usage
 
-Still efficient - Althoug the element access time gets increased from O(1) to O(n), still it is more effiecient rather than searching a whole list, because here maximum can be 3 to 4 values can have to be seached.
+The `DArr` class provides the following public methods:
 
-More functionality - Here we can also add new functionalities of std::list<T> type, but all these functionalities have to be implement manually and all those needs a O(n) operational time for maintaining the '_index' value.
+- `void add(T value)`: Adds an element to the end of the array.
+- `void addAll(std::initializer_list<T> values)`: Adds multiple elements to the end of the array.
+- `void pop_back()`: Removes the last element from the array.
+- `void shrink(size_t new_size)`: Shrinks the array to a specified size.
+- `T& operator[](size_t index)`: Accesses an element by its index. Throws `std::out_of_range` if the index is invalid.
+- `void sort()`: Sorts the array in ascending order.
+- `void sort(Comparator func)`: Sorts the array using a custom comparison function.
+- `void clear()`: Removes all elements from the array.
+- `bool empty() const`: Checks if the array is empty.
+- `size_t size() const`: Returns the number of elements in the array.
 
-Limmited functionalty - That's why only neede functionalities are given and try to maintain the minimal design.
+### Example Usage
 
-Custom sort() - The main reason to implement the sort function, because as we know that the standard library std::sort() function needs random iterators and doesn't work with lists bidirectional iterators. And this is also the main reason that std::list<T> have their own sort function for it's objects. And that oveloaded functions just pases the user povided custom comparison function to the actual internal list memeber function.
+```cpp
+#include <iostream>
+#include "DArr.hpp"
 
-Working - [1]. add() function just adds an element to the array as well as mark that element's allocated address to the unordered map with the index so that, the address can easily be accessed with those indexe's. [2]. remove() function just removes the last element from the array, but doesn't return it, just removes the last element same operation like the stack pop() function. [3]. operator[]() and here is the crucial part. This function is actually returns the reference of the required index data. But if the user asks for a out of bound access then it just throws an exception and terminates the program. But before terminating it de-allocates the object. That's why it is the users responsibility to do not try to access those such elements that doesn't exists.
+int main() {
+    DArr<int> arr;
+    arr.addAll({10, 5, 20});
+    
+    std::cout << "Initial array: ";
+    for (size_t i = 0; i < arr.size(); ++i) {
+        std::cout << arr[i] << " ";
+    }
+    std::cout << std::endl;
+    
+    arr.sort();
+    
+    std::cout << "Sorted array: ";
+    for (int val : arr) {
+        std::cout << val << " ";
+    }
+    std::cout << std::endl;
+    return 0;
+}
+```
+
+## Development Conventions
+
+*   **Header-only Implementation:** The `DArr` class is fully implemented in the `DArr.hpp` header file, a common practice for C++ template classes.
+*   **STL Usage:** The project makes extensive use of the C++ Standard Template Library (STL), particularly `std::list`, `std::unordered_map`, and `std::function`.
+*   **Custom Sorting:** The class provides its own `sort()` method, which wraps `std::list::sort()`. It supports both default ascending sort and custom comparison functions.
+*   **Error Handling:** Out-of-bounds access in `operator[]` is handled by throwing a `std::out_of_range` exception.
+*   **Namespace:** The `DArr` class is defined in the global namespace.
+*   **Comments:** The code is well-documented with comments explaining the purpose of the class and its methods.

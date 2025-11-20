@@ -1,19 +1,21 @@
 #include <iostream>
 #include <string>
-#include "DynamicArray.hpp"
+#include "DArr.hpp"
 
 int main(int argc, char const *argv[]){
     using namespace std;
     
-    DynamicArray<string> darr;
-    DynamicArray<string*> darr2;
-    darr.remove(); // doesn't do any type of change and not raised any error
+    DArr<string> darr; 
+    DArr<string*> darr2;
+    darr.pop_back(); // doesn't do any type of change and not raised any error
+    
+    darr.addAll({ "elem 1", "elem 2", "elem 3", "elem 4", "elem 5" });
     // add some elements
-    darr.add("elem 1");
-    darr.add("elem 2");
-    darr.add("elem 3");
-    darr.add("elem 4");
-    darr.add("elem 5");
+    // darr.add("elem 1");
+    // darr.add("elem 2");
+    // darr.add("elem 3");
+    // darr.add("elem 4");
+    // darr.add("elem 5");
     
     cout <<"Array 1 Size : ("<< darr.size() <<") initially "<<endl;
     for (short int i = 0; i < darr.size(); ++i){
@@ -36,8 +38,14 @@ int main(int argc, char const *argv[]){
     cout <<"Array 1 Size : ("<< darr.size() <<") custom sort - decending order "<<endl;
     for (auto i : darr){ cout << i <<endl; }
     
-    darr.remove(); // removes 5th element(darr[4]) so, accessing it throws an exception 
-    // darr[4] = "";  // throw an 'std::out_of_range' exception and terminate the program
+    darr.pop_back(); // removes 5th element(darr[4]) so, accessing it throws an exception 
+    
+    try {
+        darr[4] = "";  // throw an 'std::out_of_range' exception
+    } catch (const std::out_of_range &e) {
+        cout << "\nCaught exception as expected: " << e.what() << endl;
+    }
+
     darr.clear();  darr2.clear();
     return 0;
 }
