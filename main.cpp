@@ -1,6 +1,6 @@
 #include <iostream>
 #include <string>
-#include "DArr.hpp"
+#include "DynamicArray.hpp"
 
 int main(int argc, char const *argv[]){
     using namespace std;
