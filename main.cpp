@@ -40,7 +40,7 @@ int main(int argc, char const *argv[]){
     
     darr.pop_back(); // removes 5th element(darr[4]) so, accessing it throws an exception 
     
-    // testing the exception handling 
+    // // testing the exception handling 
     // try {
     //     darr[4] = "";  // throw an 'std::out_of_range' exception
     // } catch (const std::out_of_range &e) {
