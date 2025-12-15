@@ -2,8 +2,8 @@
 #define DARRAY_HPP
 
 #include <list>
-#include <functional>
 #include <iterator>
+#include <functional>
 #include <initializer_list>
 #include <stdexcept>
 #include <utility>
