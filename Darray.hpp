@@ -129,16 +129,20 @@ template <typename T>
 Darray<T>& Darray<T>::operator=(const Darray &other){
     
     if (this != &other){
-        // Allocate new resources first (Strong Exception Guarantee)
-        auto newAddresses = new iterator[other.maxSize];
-        std::list<T> newData = other.data; // Copy list
-        // If we get here, allocations succeeded. Now commit changes.
-        delete[] addresses;
-        addresses = newAddresses;
-        data = std::move(newData);
-        index = other.index;
-        maxSize = other.maxSize;
-        rebuildAllAddresses();
+        try {
+            // Allocate new resources first (Strong Exception Guarantee)
+            auto newAddresses = new iterator[other.maxSize];
+            std::list<T> newData = other.data; // Copy list
+            delete[] addresses;
+            addresses = newAddresses;
+            data = std::move(newData);
+            index = other.index;
+            maxSize = other.maxSize;
+            rebuildAllAddresses();
+        } catch (...) {
+            delete[] newAddresses;
+            throw;
+        }
     }
     return *this;
 }
@@ -165,7 +169,10 @@ Darray<T>& Darray<T>::operator=(Darray &&other) noexcept {
 template <typename T>
 void Darray<T>::add(const T &val){
     
-    if (index >= maxSize)  resizeAddressTable(maxSize * 2);
+    if (index >= maxSize) {
+        size_t newSize = (maxSize == 0) ? 25 : maxSize * 2;
+        resizeAddressTable(newSize);
+    }
     data.push_back(val);
     // std::prev() gives the recently inserted elem iterator
     addresses[index] = std::prev(data.end());
@@ -176,7 +183,10 @@ void Darray<T>::add(const T &val){
 template <typename T>
 void Darray<T>::add(T &&val){
     
-    if (index >= maxSize)  resizeAddressTable(maxSize * 2);
+    if (index >= maxSize) {
+        size_t newSize = (maxSize == 0) ? 25 : maxSize * 2;
+        resizeAddressTable(newSize);
+    }
     data.push_back(std::move(val));
     addresses[index++] = std::prev(data.end());
 }

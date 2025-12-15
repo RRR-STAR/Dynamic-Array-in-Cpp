@@ -49,12 +49,12 @@ int main(int argc, char const *argv[]){
     
     // // testing the exception handling 
     // try {
-    //     darr[darr.size() - 1] = "";  // throw an 'std::out_of_range' exception
-    // } catch (const std::out_of_range &e) {
+    //     darr[darr.size() - 1] = "";  // throw an 'out_of_range' exception
+    // } catch (const out_of_range &e) {
     //     cout << "\nCaught exception as expected: " << e.what() << endl;
     // }
     
-    auto darr3 = std::move(darr); // testing move constructor
+    auto darr3 = move(darr); // testing move constructor
     cout <<"Array 3 Size (moved from Array 1) : ("<< darr3.size() <<") "<<endl;
     for (auto i : darr3){ 
         i += 'X';
@@ -73,7 +73,7 @@ int main(int argc, char const *argv[]){
     for (auto i : darr3){ cout << i <<endl; }
     
     Darray<string> darr5;
-    darr5 = std::move(darr3); // testing move assignment operator
+    darr5 = move(darr3); // testing move assignment operator
     cout <<"Array 5 Size (move assigned from Array 3) : ("<< darr5.size() <<") "<<endl;
     for (auto i : darr5){ cout << i <<endl; }
     // after move assignment darr3 becomes empty
@@ -81,6 +81,11 @@ int main(int argc, char const *argv[]){
     for (auto i : darr3){ cout << i <<endl; }
     
     darr.clear(); darr2.clear(); darr3.clear(); darr4.clear(); darr5.clear();
-    cout << darr2[0] <<endl; // should throw exception
+    
+    // cout << darr2[0] << endl; // should throw exception
+    auto s = string("elem 8");
+    darr2.addAt(0, &s);
+    cout << *darr2[0] <<endl;
+    
     return 0;
 }
