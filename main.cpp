@@ -81,6 +81,6 @@ int main(int argc, char const *argv[]){
     for (auto i : darr3){ cout << i <<endl; }
     
     darr.clear(); darr2.clear(); darr3.clear(); darr4.clear(); darr5.clear();
-    // cout << darr2[0] <<endl; // should throw exception
+    cout << darr2[0] <<endl; // should throw exception
     return 0;
 }
