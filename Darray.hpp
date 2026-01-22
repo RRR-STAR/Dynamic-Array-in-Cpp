@@ -91,6 +91,8 @@ class Darray final {
     const T& operator[](const size_t index) const;
     
     // Iterators
+    // there are 2 different types of iterators: iterator and const_iterator
+    // and the 3rd type is for explicitly requesting a const_iterator
     inline iterator begin() noexcept { return data.begin(); }
     inline const_iterator begin() const noexcept { return data.begin(); }
     inline const_iterator cbegin() const noexcept { return data.cbegin(); }
@@ -129,9 +131,9 @@ template <typename T>
 Darray<T>& Darray<T>::operator=(const Darray &other){
     
     if (this != &other){
+        // Allocate new resources first
+        auto newAddresses = new iterator[other.maxSize];
         try {
-            // Allocate new resources first (Strong Exception Guarantee)
-            auto newAddresses = new iterator[other.maxSize];
             std::list<T> newData = other.data; // Copy list
             delete[] addresses;
             addresses = newAddresses;
